@@ -624,8 +624,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   .submit-fab { bottom: 10px; padding: 8px 10px; }
   .submit-fab .btn-primary { padding: 9px 18px; font-size: 13px; }
   .fab-info { font-size: 12px; padding-left: 6px; }
-}
-</style>
+}</style>
 </head>
 <body>
 <div id="root"></div>
@@ -1262,7 +1261,6 @@ const SUBJECTS = [
   function App() {
     const [view, setView] = useState("setup");
     const [selected, setSelected] = useState(SUBJECTS.map((_, i) => i));
-    const [limit, setLimit] = useState(0);
     const [exam, setExam] = useState([]);
     const [answers, setAnswers] = useState({});
     const [submitted, setSubmitted] = useState(false);
@@ -1310,7 +1308,7 @@ const SUBJECTS = [
         window.alert("Please select at least one subject.");
         return;
       }
-      const newExam = buildExam(SUBJECTS, selected, limit);
+      const newExam = buildExam(SUBJECTS, selected, 0);
       setExam(newExam);
       setAnswers({});
       setSubmitted(false);
@@ -1350,7 +1348,7 @@ const SUBJECTS = [
     };
 
     const handleReshuffle = () => {
-      const newExam = buildExam(SUBJECTS, selected, limit);
+      const newExam = buildExam(SUBJECTS, selected, 0);
       setExam(newExam);
       setAnswers({});
       setSubmitted(false);
@@ -1413,31 +1411,13 @@ const SUBJECTS = [
               );
             })
           ),
-          e("h2", { style: { marginTop: 4 } }, "Number of Questions"),
-          e("div", { className: "help" }, "Leave blank or 0 for all available."),
-          e(
-            "div",
-            { className: "limit-row" },
-            e("label", { htmlFor: "limit" }, "Limit:"),
-            e("input", {
-              id: "limit", type: "number", min: 0, max: totalAvailable,
-              value: limit || "",
-              placeholder: "All (" + totalAvailable + ")",
-              onChange: (ev) => {
-                const v = parseInt(ev.target.value, 10);
-                setLimit(isNaN(v) || v < 0 ? 0 : v);
-              },
-            }),
-            e("span", { style: { color: "#6b7280", fontSize: 13 } }, "of " + totalAvailable + " available")
-          ),
           e(
             "div",
             { className: "start-bar" },
             e(
               "div",
               { className: "selected-info" },
-              selected.length + " subject(s) · " +
-                (limit > 0 && limit < totalAvailable ? limit : totalAvailable) + " questions"
+              selected.length + " subject(s) · " + totalAvailable + " questions"
             ),
             e(
               "button",
@@ -1710,7 +1690,6 @@ const SUBJECTS = [
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(e(App));
-})();
-</script>
+})();</script>
 </body>
 </html>
